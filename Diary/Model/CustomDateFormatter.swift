@@ -10,14 +10,16 @@ import Foundation
 struct CustomDateFormatter {
     static let customDateFormatter: DateFormatter = {
         let customDateFormatter = DateFormatter()
-        customDateFormatter.locale = Locale(identifier: "koKR")
-        customDateFormatter.dateFormat = "yyyy년 MM월 dd일"
+        customDateFormatter.dateStyle = .long
+        customDateFormatter.timeStyle = .none
 
         return customDateFormatter
     }()
 
     static func formatTodayDate() -> String {
+        let userLocale = Locale.current
         let today = Date()
+        customDateFormatter.locale = userLocale
         let formattedTodayDate = customDateFormatter.string(from: today)
 
         return formattedTodayDate
