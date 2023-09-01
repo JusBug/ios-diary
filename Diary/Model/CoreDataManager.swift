@@ -38,4 +38,16 @@ class CoreDataManager {
             managedObject.setValue(sample.createdDate, forKey: "createdDate")
         }
     }
+    
+    func fetchDiary() -> [Entity] {
+        do {
+            let readRequest = Entity.fetchRequest()
+            let sampleData = try context.fetch(readRequest)
+            return sampleData
+        } catch {
+            print(error.localizedDescription)
+        }
+        
+        return []
+    }
 }
