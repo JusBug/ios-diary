@@ -21,6 +21,7 @@
 		D0204A382A9F219A003C2022 /* CustomDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0204A372A9F219A003C2022 /* CustomDateFormatter.swift */; };
 		D0204A4A2AA207A4003C2022 /* Entity+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0204A482AA207A4003C2022 /* Entity+CoreDataClass.swift */; };
 		D0204A4B2AA207A4003C2022 /* Entity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0204A492AA207A4003C2022 /* Entity+CoreDataProperties.swift */; };
+		D0204A4D2AA20833003C2022 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0204A4C2AA20833003C2022 /* CoreDataManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 		D0204A372A9F219A003C2022 /* CustomDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDateFormatter.swift; sourceTree = "<group>"; };
 		D0204A482AA207A4003C2022 /* Entity+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Entity+CoreDataClass.swift"; sourceTree = "<group>"; };
 		D0204A492AA207A4003C2022 /* Entity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Entity+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		D0204A4C2AA20833003C2022 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +60,7 @@
 			children = (
 				0A86C7822A9DA5E800584161 /* Sample.swift */,
 				D0204A372A9F219A003C2022 /* CustomDateFormatter.swift */,
+				D0204A4C2AA20833003C2022 /* CoreDataManager.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -213,6 +216,7 @@
 				C739AE2F284DF28600741E8F /* Diary.xcdatamodeld in Sources */,
 				D0204A362A9EE7B5003C2022 /* DetailViewController.swift in Sources */,
 				D0204A4A2AA207A4003C2022 /* Entity+CoreDataClass.swift in Sources */,
+				D0204A4D2AA20833003C2022 /* CoreDataManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
