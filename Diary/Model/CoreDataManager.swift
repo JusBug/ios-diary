@@ -30,6 +30,14 @@ class CoreDataManager {
         return NSEntityDescription.entity(forEntityName: "Diary", in: context)
     }
     
+    func saveToContext() {
+        do {
+            try context.save()
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
     func setUpEntity(_ sample: Sample) {
         if let entity = diaryEntity {
             let managedObject = NSManagedObject(entity: entity, insertInto: context)
@@ -60,5 +68,15 @@ class CoreDataManager {
         }
         
         return samples
+    }
+    
+    func updateEntity(_ sample: Sample) {
+        let fetchResults = fetchEntity()
+        for result in fetchResults {
+            if result.body == sample.body {
+                result.title = "Updated"
+            }
+        }
+        saveToContext()
     }
 }
