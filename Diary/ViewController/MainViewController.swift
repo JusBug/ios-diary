@@ -5,6 +5,7 @@
 // 
 
 import UIKit
+import CoreData
 
 final class MainViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!

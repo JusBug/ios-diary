@@ -29,23 +29,16 @@ final class DetailViewController: UIViewController {
         super.viewDidLoad()
         configureTextView()
         configureNavigationTitle()
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        setUpOvserver()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
         self.view.endEditing(true)
     }
     
-    private func configureNavigationTitle() {
-        guard let createdDate = sample?.createdDate else {
-            let formattedTodayDate = CustomDateFormatter.formatTodayDate()
-            self.navigationItem.title = formattedTodayDate
-            return
-        }
-        let formattedSampleDate = CustomDateFormatter.formatSampleDate(sampleDate: createdDate)
-        
-        self.navigationItem.title = formattedSampleDate
+    private func setUpOvserver() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     private func configureTextView() {
@@ -58,6 +51,17 @@ final class DetailViewController: UIViewController {
         }
         textView.layer.borderWidth = 1
         textView.text = sample.title + "\n\n" + sample.body
+    }
+    
+    private func configureNavigationTitle() {
+        guard let createdDate = sample?.createdDate else {
+            let formattedTodayDate = CustomDateFormatter.formatTodayDate()
+            self.navigationItem.title = formattedTodayDate
+            return
+        }
+        let formattedSampleDate = CustomDateFormatter.formatSampleDate(sampleDate: createdDate)
+        
+        self.navigationItem.title = formattedSampleDate
     }
     
     @objc private func keyboardWillShow(_ sender: Notification) {
