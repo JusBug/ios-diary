@@ -10,6 +10,8 @@ import Foundation
 struct CustomDateFormatter {
     static let customDateFormatter: DateFormatter = {
         let customDateFormatter = DateFormatter()
+        let preferredLanguage = Locale.preferredLanguages.first ?? "kr_KR"
+        customDateFormatter.locale = Locale(identifier: preferredLanguage)
         customDateFormatter.dateStyle = .long
         customDateFormatter.timeStyle = .none
 
@@ -17,10 +19,9 @@ struct CustomDateFormatter {
     }()
 
     static func formatTodayDate() -> String {
-        let userLocale = Locale.current
         let today = Date()
-        customDateFormatter.locale = userLocale
         let formattedTodayDate = customDateFormatter.string(from: today)
+        customDateFormatter.timeZone = TimeZone.current
 
         return formattedTodayDate
     }
