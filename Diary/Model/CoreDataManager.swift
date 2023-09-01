@@ -79,4 +79,11 @@ class CoreDataManager {
         }
         saveToContext()
     }
+    
+    func deleteEntity(_ sample: Sample) {
+        let fetchResults = fetchEntity()
+        let sample = fetchResults.filter({ $0.title == sample.title })[0]
+        context.delete(sample)
+        saveToContext()
+    }
 }
