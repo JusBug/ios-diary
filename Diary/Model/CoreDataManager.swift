@@ -27,7 +27,7 @@ class CoreDataManager {
     }
     
     var diaryEntity: NSEntityDescription? {
-        return NSEntityDescription.entity(forEntityName: "Diary", in: context)
+        return NSEntityDescription.entity(forEntityName: "Entity", in: context)
     }
     
     func saveToContext() {
