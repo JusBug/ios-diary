@@ -26,7 +26,16 @@ class CoreDataManager {
         return persistentContainer.viewContext
     }
     
-    var bookmarkEntity: NSEntityDescription? {
+    var diaryEntity: NSEntityDescription? {
         return NSEntityDescription.entity(forEntityName: "Diary", in: context)
+    }
+    
+    func setUpDiary(_ sample: Sample) {
+        if let entity = diaryEntity {
+            let managedObject = NSManagedObject(entity: entity, insertInto: context)
+            managedObject.setValue(sample.title, forKey: "title")
+            managedObject.setValue(sample.body, forKey: "body")
+            managedObject.setValue(sample.createdDate, forKey: "createdDate")
+        }
     }
 }
