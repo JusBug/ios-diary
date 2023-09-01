@@ -10,10 +10,10 @@ import UIKit
 class DetailViewController: UIViewController {
     @IBOutlet weak var titleTextView: UITextView!
     @IBOutlet weak var bodyTextView: UITextView!
-    private var sample: Sample?
-    private var originalFrame: CGRect?
+    private let sample: Sample?
+    let placeHolderText = "Input Text"
     
-    init?(sample: Sample, coder: NSCoder) {
+    init?(sample: Sample? = nil, coder: NSCoder) {
         self.sample = sample
         super.init(coder: coder)
     }
@@ -39,24 +39,37 @@ class DetailViewController: UIViewController {
     }
     
     private func configureNavigationTitle() {
-        guard let createdDate = sample?.createdDate else { return }
+        guard let createdDate = sample?.createdDate else {
+            let formattedTodayDate = CustomDateFormatter.formatTodayDate()
+            self.navigationItem.title = formattedTodayDate
+            return
+        }
         let formattedSampleDate = CustomDateFormatter.formatSampleDate(sampleDate: createdDate)
         
         self.navigationItem.title = formattedSampleDate
     }
     
     private func configureTextView() {
-        titleTextView.text = sample?.title
-        bodyTextView.text = sample?.body
         titleTextView.layer.borderWidth = 1
         bodyTextView.layer.borderWidth = 1
+        
+        guard let sample else {
+            titleTextView.text = placeHolderText
+            titleTextView.textColor = .lightGray
+            titleTextView.delegate = self
+            
+            bodyTextView.text = placeHolderText
+            bodyTextView.textColor = .lightGray
+            bodyTextView.delegate = self
+            return
+        }
+        
+        titleTextView.text = sample.title
+        bodyTextView.text = sample.body
     }
     
     @objc func keyboardWillShow(_ sender: Notification) {
-        if originalFrame == nil {
-            originalFrame = view.frame
-        }
-        
+
         if let keyboardFrame = (sender.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             let keyboardHeight = keyboardFrame.height
             let safeAreaBottom = view.safeAreaInsets.bottom
@@ -67,8 +80,32 @@ class DetailViewController: UIViewController {
     }
     
     @objc func keyboardWillHide(_ sender: Notification) {
-        if originalFrame != nil {
-            bodyTextView.contentInset = UIEdgeInsets.zero
+        bodyTextView.contentInset = UIEdgeInsets.zero
+
+    }
+}
+extension DetailViewController: UITextViewDelegate {
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if titleTextView.text == placeHolderText {
+            titleTextView.text = nil
+            titleTextView.textColor = .black
+        }
+        
+        if bodyTextView.text == placeHolderText {
+            bodyTextView.text = nil
+            bodyTextView.textColor = .black
+        }
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if titleTextView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            titleTextView.text = placeHolderText
+            titleTextView.textColor = .lightGray
+        }
+        
+        if bodyTextView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            bodyTextView.text = placeHolderText
+            bodyTextView.textColor = .lightGray
         }
     }
 }
