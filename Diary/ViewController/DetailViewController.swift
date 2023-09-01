@@ -21,6 +21,10 @@ final class DetailViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureTextView()
@@ -31,10 +35,6 @@ final class DetailViewController: UIViewController {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
         self.view.endEditing(true)
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
     }
     
     private func configureNavigationTitle() {
@@ -49,8 +49,6 @@ final class DetailViewController: UIViewController {
     }
     
     private func configureTextView() {
-        textView.layer.borderWidth = 1
-        
         guard let sample else {
             textView.text = placeHolderText
             textView.textColor = .lightGray
@@ -58,11 +56,11 @@ final class DetailViewController: UIViewController {
 
             return
         }
-        
+        textView.layer.borderWidth = 1
         textView.text = sample.title + "\n\n" + sample.body
     }
     
-    @objc func keyboardWillShow(_ sender: Notification) {
+    @objc private func keyboardWillShow(_ sender: Notification) {
         if let keyboardFrame = (sender.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             let keyboardHeight = keyboardFrame.height
             let safeAreaBottom = view.safeAreaInsets.bottom
@@ -72,7 +70,7 @@ final class DetailViewController: UIViewController {
         }
     }
     
-    @objc func keyboardWillHide(_ sender: Notification) {
+    @objc private func keyboardWillHide(_ sender: Notification) {
         textView.contentInset = UIEdgeInsets.zero
     }
 }
