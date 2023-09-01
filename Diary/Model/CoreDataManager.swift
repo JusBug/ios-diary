@@ -21,4 +21,12 @@ class CoreDataManager {
         })
         return container
     }()
+    
+    var context: NSManagedObjectContext {
+        return persistentContainer.viewContext
+    }
+    
+    var bookmarkEntity: NSEntityDescription? {
+        return NSEntityDescription.entity(forEntityName: "Diary", in: context)
+    }
 }
