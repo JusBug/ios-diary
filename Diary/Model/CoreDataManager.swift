@@ -30,7 +30,7 @@ class CoreDataManager {
         return NSEntityDescription.entity(forEntityName: "Diary", in: context)
     }
     
-    func setUpDiary(_ sample: Sample) {
+    func setUpEntity(_ sample: Sample) {
         if let entity = diaryEntity {
             let managedObject = NSManagedObject(entity: entity, insertInto: context)
             managedObject.setValue(sample.title, forKey: "title")
@@ -39,7 +39,7 @@ class CoreDataManager {
         }
     }
     
-    func fetchDiary() -> [Entity] {
+    func fetchEntity() -> [Entity] {
         do {
             let readRequest = Entity.fetchRequest()
             let sampleData = try context.fetch(readRequest)
@@ -49,5 +49,16 @@ class CoreDataManager {
         }
         
         return []
+    }
+    
+    func getEntity() -> [Sample] {
+        var samples: [Sample] = []
+        let fetchResults = fetchEntity()
+        for result in fetchResults {
+            let sample = Sample(title: result.title ?? "", body: result.body ?? "", createdDate: Int(result.createdDate))
+            samples.append(sample)
+        }
+        
+        return samples
     }
 }
