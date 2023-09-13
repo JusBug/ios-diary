@@ -23,7 +23,7 @@ struct CustomDateFormatter {
         return formattedTodayDate
     }
 
-    static func formatSampleDate( sampleDate: Int) -> String {
+    static func formatSampleDate(sampleDate: Int64) -> String {
         let timeInterval = TimeInterval(sampleDate)
         let inputDate = Date(timeIntervalSince1970: timeInterval)
         let formattedDate = customDateFormatter.string(from: inputDate)

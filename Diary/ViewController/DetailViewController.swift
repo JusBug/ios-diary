@@ -102,9 +102,11 @@ final class DetailViewController: UIViewController {
             self.navigationItem.title = formattedTodayDate
             return
         }
-        let formattedSampleDate = CustomDateFormatter.formatSampleDate(sampleDate: Int(createdDate))
         
-        self.navigationItem.title = formattedSampleDate
+        print("DetailVCTitle: \(createdDate)")
+        let formattedEntityDate = CustomDateFormatter.formatSampleDate(sampleDate: createdDate)
+        
+        self.navigationItem.title = formattedEntityDate
     }
     
     @objc private func keyboardWillShow(_ sender: Notification) {
