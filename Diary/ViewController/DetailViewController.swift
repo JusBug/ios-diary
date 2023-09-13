@@ -90,6 +90,7 @@ final class DetailViewController: UIViewController {
             
             return
         }
+        textView.textColor = .white
         textView.layer.borderWidth = 1
         textView.text = sample.title + "\n\n" + sample.body
     }
@@ -124,7 +125,7 @@ extension DetailViewController: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView.text == placeHolderText {
             textView.text = nil
-            textView.textColor = .black
+            textView.textColor = .white
         }
     }
     
