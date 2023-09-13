@@ -21,6 +21,18 @@ final class MainViewController: UIViewController {
         decodeJSON()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.callGet()
+    }
+    
+    private func callGet() {
+        coreDataManager.getAllEntity()
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
+    
     @IBAction func tapAddButton(_ sender: Any) {
         guard let NewDetailViewController = self.storyboard?.instantiateViewController(identifier: "DetailViewController", creator: {coder in DetailViewController(sample: nil, coder: coder)}) else { return }
         
@@ -47,7 +59,7 @@ final class MainViewController: UIViewController {
 
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.sample.count
+        return self.coreDataManager.entities.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -55,8 +67,8 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             return UITableViewCell()
         }
         
-        let sample: Sample = self.sample[indexPath.row]
-        cell.configureLabel(sample: sample)
+        let entity: Entity = self.coreDataManager.entities[indexPath.row]
+        cell.configureLabel(entity: entity)
         
         return cell
     }
@@ -71,7 +83,11 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let delete = UIContextualAction(style: .normal, title: "Delete", handler: { action, view, completion in
             print("delete")
+            let entity = self.coreDataManager.entities[indexPath.row]
+            
+            self.coreDataManager.delete(entity: entity)
             completion(true)
+            
         })
         
         return UISwipeActionsConfiguration(actions: [delete])

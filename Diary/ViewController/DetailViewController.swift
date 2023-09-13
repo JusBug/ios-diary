@@ -26,6 +26,25 @@ final class DetailViewController: UIViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        configureTextView()
+        configureNavigationTitle()
+        setUpOvserver()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        guard let text = textView.text, !text.isEmpty else {
+            return
+        }
+        coreDataManager.createEntity(title: text, body: "")
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
+        self.view.endEditing(true)
+    }
+    
     @IBAction func didTapMenu(_ sender: Any) {
         let actionSheet = UIAlertController(title: "Menu",
                                             message: nil,
@@ -56,17 +75,6 @@ final class DetailViewController: UIViewController {
         actionSheet.addAction(delete)
         actionSheet.addAction(cancel)
         present(actionSheet, animated: true, completion: nil)
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        configureTextView()
-        configureNavigationTitle()
-        setUpOvserver()
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
-        self.view.endEditing(true)
     }
     
     private func setUpOvserver() {
