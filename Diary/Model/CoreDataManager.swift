@@ -35,9 +35,6 @@ class CoreDataManager {
     func getAllEntity() {
         do {
             entities = try context.fetch(Entity.fetchRequest())
-            //            DispatchQueue.main.async {
-            //                self.tableView.reloadData()
-            //            }
         } catch {
             print(error.localizedDescription)
         }
