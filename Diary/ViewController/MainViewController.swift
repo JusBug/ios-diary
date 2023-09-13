@@ -81,7 +81,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let delete = UIContextualAction(style: .normal, title: "Delete", handler: { action, view, completion in
+        let delete = UIContextualAction(style: .destructive, title: "Delete", handler: { action, view, completion in
             let entity = self.coreDataManager.entities[indexPath.row]
             self.coreDataManager.delete(entity: entity)
             completion(true)
