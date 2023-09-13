@@ -9,12 +9,13 @@ import UIKit
 
 final class DetailViewController: UIViewController {
     @IBOutlet private weak var bodyTextView: UITextView!
-    private let sample: Sample?
+    private let item: Item?
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     let placeHolderText = "Input Text"
     
-    init?(sample: Sample? = nil, coder: NSCoder) {
-        self.sample = sample
+    init?(item: Item? = nil, coder: NSCoder) {
+        self.item = item
         super.init(coder: coder)
     }
     
@@ -28,6 +29,7 @@ final class DetailViewController: UIViewController {
         configureNavigationTitle()
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        bodyTextView.delegate = self
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
@@ -39,12 +41,12 @@ final class DetailViewController: UIViewController {
     }
     
     private func configureNavigationTitle() {
-        guard let createdDate = sample?.createdDate else {
+        guard let createdDate = item?.itemCreatedDate else {
             let formattedTodayDate = CustomDateFormatter.formatTodayDate()
             self.navigationItem.title = formattedTodayDate
             return
         }
-        let formattedSampleDate = CustomDateFormatter.formatSampleDate(sampleDate: createdDate)
+        let formattedSampleDate = CustomDateFormatter.formatTodayDate() // 수정해야함
         
         self.navigationItem.title = formattedSampleDate
     }
@@ -52,14 +54,14 @@ final class DetailViewController: UIViewController {
     private func configureTextView() {
         bodyTextView.layer.borderWidth = 1
         
-        guard let sample else {
+        guard let item else {
             bodyTextView.text = placeHolderText
             bodyTextView.textColor = .lightGray
             bodyTextView.delegate = self
             return
         }
         
-        bodyTextView.text = sample.title + "\n" + sample.body
+        bodyTextView.text = (item.itemTitle ?? "오류") + "\n" + (item.itemBody ?? "오류")
     }
     
     @objc func keyboardWillShow(_ sender: Notification) {
@@ -75,6 +77,19 @@ final class DetailViewController: UIViewController {
     @objc func keyboardWillHide(_ sender: Notification) {
         bodyTextView.contentInset = UIEdgeInsets.zero
     }
+    
+    private func saveChanges() {
+        guard let item = item else { return } //
+
+        item.itemTitle = bodyTextView.text.components(separatedBy: .newlines).first
+        item.itemBody = bodyTextView.text
+
+        do {
+            try context.save()
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
 }
 
 extension DetailViewController: UITextViewDelegate {
@@ -83,6 +98,7 @@ extension DetailViewController: UITextViewDelegate {
             bodyTextView.text = nil
             bodyTextView.textColor = .black
         }
+        saveChanges()
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
@@ -90,5 +106,6 @@ extension DetailViewController: UITextViewDelegate {
             bodyTextView.text = placeHolderText
             bodyTextView.textColor = .lightGray
         }
+        saveChanges()
     }
 }

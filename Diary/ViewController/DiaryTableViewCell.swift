@@ -24,11 +24,11 @@ final class DiaryTableViewCell: UITableViewCell {
         bodyLabel.text = nil
     }
     
-    func configureLabel(sample: Sample) {
-        let formattedSampleDate = CustomDateFormatter.formatSampleDate(sampleDate: sample.createdDate)
+    func configureLabel(item: Item) {
+        let formattedSampleDate = CustomDateFormatter.formatTodayDate() // 수정해야함
 
         createdDateLabel.text = formattedSampleDate
-        titleLabel.text = sample.title
-        bodyLabel.text = sample.body
+        titleLabel.text = item.itemTitle
+        bodyLabel.text = item.itemBody
     }
 }

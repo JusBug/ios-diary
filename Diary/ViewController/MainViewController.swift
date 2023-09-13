@@ -8,10 +8,10 @@ import UIKit
 
 final class MainViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
-    //var sample: [Sample] = []
+    var sample: [Sample] = []
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    private var models: [Item] = []
+    private var items: [Item] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,12 +19,16 @@ final class MainViewController: UIViewController {
         tableView.rowHeight = 55
         tableView.dataSource = self
         tableView.delegate = self
-        //decodeJSON()
+        decodeJSON()
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(tapAddButton))
+        saveSampleData()
+        getAllItems()
     }
     
+    override vie
+    
     @objc func tapAddButton() {
-        guard let NewDetailViewController = self.storyboard?.instantiateViewController(identifier: "DetailViewController", creator: {coder in DetailViewController(sample: nil, coder: coder)}) else { return }
+        guard let NewDetailViewController = self.storyboard?.instantiateViewController(identifier: "DetailViewController", creator: {coder in DetailViewController(item: nil, coder: coder)}) else { return }
         
         self.navigationController?.pushViewController(NewDetailViewController, animated: true)
     }
@@ -33,23 +37,27 @@ final class MainViewController: UIViewController {
         tableView.register(UINib(nibName: "DiaryTableViewCell", bundle: nil), forCellReuseIdentifier: "cell")
     }
     
-//    private func decodeJSON() {
-//        let jsonDecoder = JSONDecoder()
-//        guard let dataAsset = NSDataAsset(name: "sample") else { return }
-//
-//        do {
-//            self.sample = try jsonDecoder.decode([Sample].self, from: dataAsset.data)
-//        } catch {
-//            print(error.localizedDescription)
-//        }
-//
-//        tableView.reloadData()
-//    }
+    private func decodeJSON() {
+        let jsonDecoder = JSONDecoder()
+        guard let dataAsset = NSDataAsset(name: "sample") else { return }
+
+        do {
+            self.sample = try jsonDecoder.decode([Sample].self, from: dataAsset.data)
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    private func saveSampleData() {
+        for item in sample {
+            createItem(itemTitle: item.title, itemBody: item.body)
+        }
+    }
 }
 
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.models.count
+        return self.items.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -57,15 +65,15 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             return UITableViewCell()
         }
         
-        let model = models[indexPath.row]
-        cell.configureLabel(sample: sample)
+        let item = items[indexPath.row]
+        cell.configureLabel(item: item)
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let sample: Sample = self.sample[indexPath.row]
-        guard let detailViewController = self.storyboard?.instantiateViewController(identifier: "DetailViewController", creator: {coder in DetailViewController(sample: sample, coder: coder)}) else { return }
+        let item = self.items[indexPath.row]
+        guard let detailViewController = self.storyboard?.instantiateViewController(identifier: "DetailViewController", creator: {coder in DetailViewController(item: item, coder: coder)}) else { return }
         
         self.navigationController?.pushViewController(detailViewController, animated: true)
     }
@@ -74,7 +82,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
 extension MainViewController {
     func getAllItems() {
         do {
-            models = try context.fetch(Item.fetchRequest())
+            items = try context.fetch(Item.fetchRequest())
             
             DispatchQueue.main.async {
                 self.tableView.reloadData()
@@ -101,6 +109,18 @@ extension MainViewController {
     func deleteItem(item: Item) {
         context.delete(item)
         
+        do {
+            try context.save()
+            getAllItems()
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    func deleteAllItem(items: [Item]) {
+        for item in items {
+            context.delete(item)
+        }
         do {
             try context.save()
             getAllItems()
