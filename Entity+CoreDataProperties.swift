@@ -18,7 +18,7 @@ extension Entity {
 
     @NSManaged public var title: String?
     @NSManaged public var body: String?
-    @NSManaged public var createdDate: Int64
+    @NSManaged public var date: Int64
 
 }
 

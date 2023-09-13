@@ -97,7 +97,7 @@ final class DetailViewController: UIViewController {
     }
     
     private func configureNavigationTitle() {
-        guard let createdDate = entity?.createdDate else {
+        guard let createdDate = entity?.date else {
             let formattedTodayDate = CustomDateFormatter.formatTodayDate()
             self.navigationItem.title = formattedTodayDate
             return

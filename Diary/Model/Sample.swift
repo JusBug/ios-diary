@@ -8,11 +8,11 @@
 struct Sample: Decodable {
     let title: String
     let body: String
-    let createdDate: Int
+    let date: Int
     
     private enum CodingKeys: String, CodingKey {
         case title
         case body
-        case createdDate = "created_at"
+        case date = "created_at"
     }
 }
