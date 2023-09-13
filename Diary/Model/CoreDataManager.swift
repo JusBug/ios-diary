@@ -7,29 +7,14 @@
 
 import Foundation
 import CoreData
+import UIKit
 
 class CoreDataManager {
     static var shared: CoreDataManager = CoreDataManager()
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    var entities: [Entity] = []
     
-    lazy var persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "Diary")
-        
-        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
-            guard let error = error as NSError? else {
-                return
-            }
-        })
-        return container
-    }()
-    
-    var context: NSManagedObjectContext {
-        return persistentContainer.viewContext
-    }
-    
-    var diaryEntity: NSEntityDescription? {
-        return NSEntityDescription.entity(forEntityName: "Entity", in: context)
-    }
-    
+    // MARK: CRUD 구현
     func saveToContext() {
         do {
             try context.save()
@@ -38,52 +23,40 @@ class CoreDataManager {
         }
     }
     
-    func setUpEntity(_ sample: Sample) {
-        if let entity = diaryEntity {
-            let managedObject = NSManagedObject(entity: entity, insertInto: context)
-            managedObject.setValue(sample.title, forKey: "title")
-            managedObject.setValue(sample.body, forKey: "body")
-            managedObject.setValue(sample.createdDate, forKey: "createdDate")
-        }
+    // MARK: Create
+    func createEntity(title: String, body: String) {
+        let newEntity = Entity(context: context)
+        newEntity.title = title
+        newEntity.body = body
+        
+        saveToContext()
+        getAllEntity()
     }
     
-    func fetchEntity() -> [Entity] {
+    // MARK: Read
+    func getAllEntity() {
         do {
-            let readRequest = Entity.fetchRequest()
-            let sampleData = try context.fetch(readRequest)
-            return sampleData
+            entities = try context.fetch(Entity.fetchRequest())
+            //            DispatchQueue.main.async {
+            //                self.tableView.reloadData()
+            //            }
         } catch {
             print(error.localizedDescription)
         }
-        
-        return []
     }
     
-    func getEntity() -> [Sample] {
-        var samples: [Sample] = []
-        let fetchResults = fetchEntity()
-        for result in fetchResults {
-            let sample = Sample(title: result.title ?? "", body: result.body ?? "", createdDate: Int(result.createdDate))
-            samples.append(sample)
-        }
+    // MARK: Update
+    func update(entity: Entity, newTitle: String, newBody: String) {
+        entity.title = newTitle
+        entity.body = newBody
         
-        return samples
-    }
-    
-    func updateEntity(_ sample: Sample) {
-        let fetchResults = fetchEntity()
-        for result in fetchResults {
-            if result.body == sample.body {
-                result.title = "Updated"
-            }
-        }
         saveToContext()
     }
     
-    func deleteEntity(_ sample: Sample) {
-        let fetchResults = fetchEntity()
-        let sample = fetchResults.filter({ $0.title == sample.title })[0]
-        context.delete(sample)
+    // MARK: Delete
+    func delete(entity: Entity) {
+        context.delete(entity)
+        
         saveToContext()
     }
 }
