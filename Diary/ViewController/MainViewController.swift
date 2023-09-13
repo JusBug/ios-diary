@@ -11,6 +11,7 @@ final class MainViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     let coreDataManager = CoreDataManager.shared
     var sample: [Sample] = []
+    var enti = [Entity]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,7 +35,7 @@ final class MainViewController: UIViewController {
     }
     
     @IBAction func tapAddButton(_ sender: Any) {
-        guard let NewDetailViewController = self.storyboard?.instantiateViewController(identifier: "DetailViewController", creator: {coder in DetailViewController(sample: nil, coder: coder)}) else { return }
+        guard let NewDetailViewController = self.storyboard?.instantiateViewController(identifier: "DetailViewController", creator: {coder in DetailViewController(entity: nil, coder: coder)}) else { return }
         
         self.navigationController?.pushViewController(NewDetailViewController, animated: true)
     }
@@ -74,8 +75,8 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let sample: Sample = self.sample[indexPath.row]
-        guard let detailViewController = self.storyboard?.instantiateViewController(identifier: "DetailViewController", creator: {coder in DetailViewController(sample: sample, coder: coder)}) else { return }
+        let entity: Entity = self.coreDataManager.entities[indexPath.row]
+        guard let detailViewController = self.storyboard?.instantiateViewController(identifier: "DetailViewController", creator: {coder in DetailViewController(entity: entity, coder: coder)}) else { return }
         
         self.navigationController?.pushViewController(detailViewController, animated: true)
     }

@@ -9,12 +9,13 @@ import UIKit
 
 final class DetailViewController: UIViewController {
     @IBOutlet weak var textView: UITextView!
-    private let sample: Sample?
+    //private let sample: Sample?
+    private let entity: Entity?
     let placeHolderText = "Input Text"
     let coreDataManager = CoreDataManager.shared
 
-    init?(sample: Sample? = nil, coder: NSCoder) {
-        self.sample = sample
+    init?(entity: Entity? = nil, coder: NSCoder) {
+        self.entity = entity
         super.init(coder: coder)
     }
     
@@ -83,7 +84,7 @@ final class DetailViewController: UIViewController {
     }
     
     private func configureTextView() {
-        guard let sample else {
+        guard let entity else {
             textView.text = placeHolderText
             textView.textColor = .lightGray
             textView.delegate = self
@@ -92,16 +93,16 @@ final class DetailViewController: UIViewController {
         }
         textView.textColor = .white
         textView.layer.borderWidth = 1
-        textView.text = sample.title + "\n\n" + sample.body
+        textView.text = entity.title! + "\n\n" + entity.body!
     }
     
     private func configureNavigationTitle() {
-        guard let createdDate = sample?.createdDate else {
+        guard let createdDate = entity?.createdDate else {
             let formattedTodayDate = CustomDateFormatter.formatTodayDate()
             self.navigationItem.title = formattedTodayDate
             return
         }
-        let formattedSampleDate = CustomDateFormatter.formatSampleDate(sampleDate: createdDate)
+        let formattedSampleDate = CustomDateFormatter.formatSampleDate(sampleDate: Int(createdDate))
         
         self.navigationItem.title = formattedSampleDate
     }
