@@ -25,6 +25,38 @@ final class DetailViewController: UIViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
+    @IBAction func didTapMenu(_ sender: Any) {
+        let actionSheet = UIAlertController(title: "Menu",
+                                            message: nil,
+                                            preferredStyle: .actionSheet)
+        
+        let share = UIAlertAction(title: "Share", style: .default) { action in
+            let textToShare = "share the app"
+            let activityVC = UIActivityViewController(activityItems: [textToShare], applicationActivities: nil)
+            
+            self.present(activityVC, animated: true, completion: nil)
+        }
+        
+        let delete = UIAlertAction(title: "Delete", style: .destructive) { action in
+            let doublecheck = UIAlertController(title: "진짜요?", message: "정말로 삭제하시겠어요?", preferredStyle: .alert)
+            let cancel = UIAlertAction(title: "Cancel", style: .default)
+            let delete = UIAlertAction(title: "Delete", style: .destructive) { action in
+                
+            }
+            
+            doublecheck.addAction(cancel)
+            doublecheck.addAction(delete)
+            self.present(doublecheck, animated: true, completion: nil)
+        }
+        
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel)
+        
+        actionSheet.addAction(share)
+        actionSheet.addAction(delete)
+        actionSheet.addAction(cancel)
+        present(actionSheet, animated: true, completion: nil)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureTextView()
@@ -46,7 +78,7 @@ final class DetailViewController: UIViewController {
             textView.text = placeHolderText
             textView.textColor = .lightGray
             textView.delegate = self
-
+            
             return
         }
         textView.layer.borderWidth = 1
