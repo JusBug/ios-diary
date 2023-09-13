@@ -11,7 +11,8 @@ final class DetailViewController: UIViewController {
     @IBOutlet weak var textView: UITextView!
     private let sample: Sample?
     let placeHolderText = "Input Text"
-    
+    let coreDataManager = CoreDataManager.shared
+
     init?(sample: Sample? = nil, coder: NSCoder) {
         self.sample = sample
         super.init(coder: coder)

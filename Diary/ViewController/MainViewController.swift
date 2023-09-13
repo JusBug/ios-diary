@@ -9,6 +9,7 @@ import CoreData
 
 final class MainViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
+    let coreDataManager = CoreDataManager.shared
     var sample: [Sample] = []
     
     override func viewDidLoad() {
