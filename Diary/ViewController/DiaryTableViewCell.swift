@@ -26,8 +26,8 @@ final class DiaryTableViewCell: UITableViewCell {
     
     func configureLabel(entity: Entity) {
         let date = entity.date
-        print("label: \(date)")
-        let formattedSampleDate = CustomDateFormatter.formatSampleDate(sampleDate: entity.date)
+       // print("label: \(date)")
+        let formattedSampleDate = CustomDateFormatter.formatSampleDate(sampleDate: date)
 
         createdDateLabel.text = formattedSampleDate
         titleLabel.text = entity.title

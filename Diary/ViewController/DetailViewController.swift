@@ -39,7 +39,31 @@ final class DetailViewController: UIViewController {
         guard let text = textView.text, !text.isEmpty else {
             return
         }
-        coreDataManager.createEntity(title: text, body: "")
+        
+        let (title, body) = self.splitText(text: text)
+        coreDataManager.createEntity(title: title, body: body)
+    }
+    
+    private func splitText(text: String) -> (title: String, body: String) {
+        guard let text = textView.text, !text.isEmpty else {
+            return ("", "")
+        }
+        
+        let lines = text.components(separatedBy: "\n")
+        var title = ""
+        var body = ""
+        
+        if let firstLine = lines.first {
+            print(firstLine)
+            title = firstLine
+        }
+        
+        if lines.count > 1 {
+            body = lines[1...]
+                .joined(separator: "\n")
+        }
+        
+        return (title, body)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
@@ -103,7 +127,7 @@ final class DetailViewController: UIViewController {
             return
         }
         
-        print("DetailVCTitle: \(createdDate)")
+        //print("DetailVCTitle: \(createdDate)")
         let formattedEntityDate = CustomDateFormatter.formatSampleDate(sampleDate: createdDate)
         
         self.navigationItem.title = formattedEntityDate
