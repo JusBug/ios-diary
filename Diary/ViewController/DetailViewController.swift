@@ -13,6 +13,8 @@ final class DetailViewController: UIViewController {
     private let entity: Entity?
     let placeHolderText = "Input Text"
     let coreDataManager = CoreDataManager.shared
+    private var initText = ""
+    private var initEntity: Entity?
 
     init?(entity: Entity? = nil, coder: NSCoder) {
         self.entity = entity
@@ -29,9 +31,11 @@ final class DetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        textView.delegate = self
         configureTextView()
         configureNavigationTitle()
         setUpOvserver()
+        initEntity = self.entity
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -41,33 +45,50 @@ final class DetailViewController: UIViewController {
         }
         
         let (title, body) = self.splitText(text: text)
-        coreDataManager.createEntity(title: title, body: body)
+        
+        if initEntity == nil {
+            coreDataManager.createEntity(title: title, body: body)
+        } else {
+            guard let entity = self.entity else {
+                return
+            }
+            coreDataManager.update(entity: entity, newTitle: title, newBody: body)
+        }
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
+        self.view.endEditing(true)
+        
     }
     
     private func splitText(text: String) -> (title: String, body: String) {
-        guard let text = textView.text, !text.isEmpty else {
-            return ("", "")
-        }
-        
         let lines = text.components(separatedBy: "\n")
         var title = ""
         var body = ""
         
         if let firstLine = lines.first {
-            print(firstLine)
+            print("title: \(firstLine)")
             title = firstLine
         }
         
         if lines.count > 1 {
             body = lines[1...]
                 .joined(separator: "\n")
+            print("body: \(body)")
         }
         
         return (title, body)
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
-        self.view.endEditing(true)
+    func textViewDidChange(_ textView: UITextView) {
+        if let text = textView.text {
+            print("chagedText = \(text)")
+            let (title, body) = splitText(text: text)
+            
+            if let entity = self.entity {
+                coreDataManager.update(entity: entity, newTitle: title, newBody: body)
+            }
+        }
     }
     
     @IBAction func didTapMenu(_ sender: Any) {
@@ -117,7 +138,7 @@ final class DetailViewController: UIViewController {
         }
         textView.textColor = .white
         textView.layer.borderWidth = 1
-        textView.text = entity.title! + "\n\n" + entity.body!
+        textView.text = entity.title! + "\n" + entity.body!
     }
     
     private func configureNavigationTitle() {

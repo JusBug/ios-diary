@@ -24,10 +24,10 @@ final class MainViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.callGet()
+        self.callGetAllEntity()
     }
     
-    private func callGet() {
+    private func callGetAllEntity() {
         coreDataManager.getAllEntity()
         DispatchQueue.main.async {
             self.tableView.reloadData()
@@ -85,8 +85,8 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         let delete = UIContextualAction(style: .destructive, title: "Delete", handler: { action, view, completion in
             let entity = self.coreDataManager.entities[indexPath.row]
             self.coreDataManager.delete(entity: entity)
+            self.callGetAllEntity()
             completion(true)
-            self.callGet()
         })
         
         return UISwipeActionsConfiguration(actions: [delete])
